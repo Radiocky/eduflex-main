@@ -1,10 +1,31 @@
 const mongoose = require('mongoose');
 
 const courseSchema = new mongoose.Schema({
-    title: { type: String, required: true },
-    description: String,
-    teacher: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-    students: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
+  courseCode: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  courseName: {
+    type: String,
+    required: true,
+  },
+  description: {
+    type: String,
+  },
+  professorId: {
+    type: String, // or mongoose.Schema.Types.ObjectId if referencing users
+  },
+  students: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+  }],
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  }
 });
 
-module.exports = mongoose.model('Course', courseSchema);
+const Course = mongoose.model('Course', courseSchema);
+
+module.exports = Course; // ✅ make sure this line exists and ONLY this is exported

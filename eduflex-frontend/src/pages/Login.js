@@ -177,17 +177,6 @@ export default function Login() {
               "Login"
             )}
           </button>
-
-             {/* Demo credentials info - REMOVE FOR PRODUCTION */}
-            <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-md text-xs text-green-700">
-              <strong>Demo Credentials:</strong>
-              <div className="mt-2 font-mono space-y-1">
-                 <div>📧 student@eduflex.com | 🔒 student123 (Mock - Use Real)</div>
-                 <div>📧 teacher@eduflex.test | 🔒 teacher123 (Real)</div>
-                 <div>📧 admin@eduflex.local | 🔒 Admin@123 (Real)</div>
-              </div>
-            </div>
-
         </form>
       </div>
     </div>

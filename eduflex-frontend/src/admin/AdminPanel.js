@@ -48,13 +48,13 @@ function TabbedHeader({ tabs, active, setActive }) {
 
 /* ========== Dashboard Tab ========== */
 function AdminDashboard() {
-  const { getAllUsers, getAllCourses } = useApp();
+  const { fetchAllUsersAdmin, getAllCourses } = useApp();
   const [stats, setStats] = useState({ users: 0, professors: 0, students: 0, courses: 0 });
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     const load = async () => {
       setLoading(true);
-      const users = await getAllUsers();
+      const users = await fetchAllUsersAdmin();
       const courses = await getAllCourses ? await getAllCourses() : [];
       setStats({
         users: users.length,
@@ -65,7 +65,7 @@ function AdminDashboard() {
       setLoading(false);
     };
     load();
-  }, [getAllUsers, getAllCourses]);
+  }, [fetchAllUsersAdmin, getAllCourses]);
 
   if (loading) return <div>Loading overview...</div>;
 
@@ -106,22 +106,22 @@ function QuickLink({ icon, label, onClick }) {
 
 /* ========== User Management Tab ========== */
 function AdminUsers() {
-  const { getAllUsers, createUser, deleteUser } = useApp();
+  const { fetchAllUsersAdmin, createUser, deleteUser } = useApp();
   const [users, setUsers] = useState([]);
   const [roleFilter, setRoleFilter] = useState("all");
-  const [loading, setLoading] = useState(true);
+  const [, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [form, setForm] = useState({ name: "", email: "", password: "", role: "student" });
 
   useEffect(() => {
     const fetchUsers = async () => {
       setLoading(true);
-      const fetchedUsers = await getAllUsers();
+      const fetchedUsers = await fetchAllUsersAdmin();
       setUsers(fetchedUsers || []);
       setLoading(false);
     };
     fetchUsers();
-  }, [getAllUsers]);
+  }, [fetchAllUsersAdmin]);
 
   const filteredUsers = users.filter(u =>
     roleFilter === "all" ? true : u.role === roleFilter
@@ -141,7 +141,7 @@ function AdminUsers() {
     await createUser(form);
     setShowModal(false);
     setForm({ name: "", email: "", password: "", role: "student" });
-    const refreshedUsers = await getAllUsers();
+    const refreshedUsers = await fetchAllUsersAdmin();
     setUsers(refreshedUsers || []);
   };
 
@@ -149,7 +149,7 @@ function AdminUsers() {
   const handleDelete = async (userId, userName) => {
     if (window.confirm(`Are you sure you want to remove user "${userName}"? This cannot be undone.`)) {
       await deleteUser(userId);
-      const refreshedUsers = await getAllUsers();
+      const refreshedUsers = await fetchAllUsersAdmin();
       setUsers(refreshedUsers || []);
     }
   };
@@ -250,7 +250,7 @@ function AdminCourses() {
   const { getAllCourses /*, deleteCourse, createCourse */ } = useApp();
   const [courses, setCourses] = useState([]);
   const [search, setSearch] = useState("");
-  const [loading, setLoading] = useState(true);
+  const [, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchCourses = async () => {

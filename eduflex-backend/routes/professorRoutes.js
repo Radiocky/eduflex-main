@@ -1,32 +1,24 @@
+// routes/professorRoutes.js
 const express = require('express');
 const router = express.Router();
+const { authenticate, authorize } = require('../middleware/authMiddleware.js');
+const professorController = require('../controllers/professorController.js');
 
-const { authenticate, authorize } = require('../middleware/authMiddleware');
-
-const { createCourseHandler, 
-        createAssignmentHandler, 
-        getMyCoursesHandler, 
-        getMyAssignmentsHandler, 
-        getStudentsInCourseHandler, 
-        gradeSubmissionHandler }=require('../controllers/professorController')
-
+// ✅ Secure all professor routes
 router.use(authenticate);
-router.use(authorize('teacher'));
+router.use(authorize('professor'));
 
-// Teacher - Get my courses
-router.get('/courses',  getMyCoursesHandler);
+// ✅ Courses
+router.get('/courses', professorController.getMyCoursesHandler);
+router.get('/courses/:id', professorController.getCourseByIdHandler);
+router.post('/courses', professorController.createCourseHandler);
 
-// Teacher - Create Assignment
-router.post('/assignments',  createAssignmentHandler);
+// ✅ Assignments
+router.get('/assignments', professorController.getMyAssignmentsHandler);
+router.post('/assignments', professorController.createAssignmentHandler);
+router.patch('/assignments/:id/grade', professorController.gradeSubmissionHandler);
 
-// Teacher - View my assignments
-router.get('/assignments', getMyAssignmentsHandler);
-
-// Teacher - View students in a course
-router.get('/courses/:id/students',  getStudentsInCourseHandler);
-
-// Teacher - Grade assignment submission
-router.patch('/assignments/:id/grade',  gradeSubmissionHandler);
-
+// ✅ Students under a course
+router.get('/courses/:id/students', professorController.getStudentsInCourseHandler);
 
 module.exports = router;

@@ -1,0 +1,128 @@
+### Base URL
+@baseUrl = http://localhost:5000/api
+
+##############################################
+### 🔐 AUTH ROUTES
+##############################################
+
+### Register a new user (student, professor, or admin)
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "name": "Prof. Neha Verma",
+  "email": "neha.prof@eduflex.com",
+  "password": "teacher123",
+  "role": "professor"
+}
+
+### Login (get token)
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "neha.prof@eduflex.com",
+  "password": "teacher123"
+}
+
+### (Optional) Get current user from token
+GET {{baseUrl}}/auth/me
+Authorization: Bearer {{token}}
+
+##############################################
+### 🎓 PROFESSOR ROUTES
+##############################################
+
+### Get all courses created by this professor
+GET {{baseUrl}}/professors/courses
+Authorization: Bearer {{token}}
+
+### Create a new course (professor only)
+POST {{baseUrl}}/professors/courses
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "title": "Computer Networks",
+  "description": "Learn about protocols, layers, and routing in depth."
+}
+
+### Get a single course by ID
+GET {{baseUrl}}/professors/courses/{{courseId}}
+Authorization: Bearer {{token}}
+
+### Get all assignments created by this professor
+GET {{baseUrl}}/professors/assignments
+Authorization: Bearer {{token}}
+
+### Create an assignment for a course
+POST {{baseUrl}}/professors/assignments
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "title": "Routing Lab",
+  "description": "Implement distance vector routing",
+  "courseId": "{{courseId}}",
+  "dueDate": "2025-12-01"
+}
+
+##############################################
+### 🧑‍🎓 STUDENT ROUTES
+##############################################
+
+### Get all available courses
+GET {{baseUrl}}/courses
+
+### Enroll a student in a course
+POST {{baseUrl}}/courses/{{courseId}}/enroll
+Authorization: Bearer {{studentToken}}
+Content-Type: application/json
+
+{
+  "studentId": "{{studentId}}"
+}
+
+##############################################
+### 🧑‍💼 ADMIN ROUTES
+##############################################
+
+### Get all users
+GET {{baseUrl}}/admin/users
+Authorization: Bearer {{adminToken}}
+
+### Create a new course as admin (assign to teacher)
+POST {{baseUrl}}/courses
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "title": "Data Structures",
+  "description": "Stacks, Queues, Trees, and Graphs",
+  "teacher": "{{teacherId}}"
+}
+
+### Update a course
+PUT {{baseUrl}}/courses/{{courseId}}
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "title": "Updated Course Title",
+  "description": "Updated description"
+}
+
+### Delete a course
+DELETE {{baseUrl}}/courses/{{courseId}}
+Authorization: Bearer {{adminToken}}
+
+##############################################
+### ⚙️ SAMPLE TOKENS (Replace in requests)
+##############################################
+
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MDRkMmQyZTUzYThlODQ4NDI5YjJiMyIsInJvbGUiOiJwcm9mZXNzb3IiLCJpYXQiOjE3NjIwNjc3ODMsImV4cCI6MTc2MjY3MjU4M30.5Ppf5J5fWHShuNGImfwMHGanKclpfOK44yNKpAz6B1c
+@studentToken = <replace_with_student_jwt>
+@adminToken = <replace_with_admin_jwt>
+@courseId = <replace_with_course_id>
+@teacherId = <replace_with_teacher_id>
+@studentId = <replace_with_student_id>

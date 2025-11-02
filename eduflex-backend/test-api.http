@@ -1,0 +1,17 @@
+@baseUrl = http://localhost:5000/api
+
+### Get all courses
+GET {{baseUrl}}/courses
+
+### Login to get token
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "neha.prof@eduflex.com",
+  "password": "teacher123"
+}
+
+### Get courses (with token)
+GET {{baseUrl}}/courses
+Authorization: Bearer PASTE_YOUR_TOKEN_HERE

@@ -1,37 +1,32 @@
 const express = require('express');
 const dotenv = require('dotenv');
-const cors = require('cors'); // You had this in package.json, let's use it
-const connectDB = require('./config/db'); // We will use this!
+const cors = require('cors');
+const connectDB = require('./config/db');
 
-// Load environment variables
 dotenv.config();
 
-// Connect to MongoDB
-connectDB(process.env.MONGO_URI); // Pass the URI to your function
+// ✅ Connect to Database BEFORE starting the server!
+connectDB();
 
-// Create Express app
 const app = express();
-app.use(cors()); // Enable Cross-Origin Resource Sharing
-app.use(express.json()); // Middleware to parse JSON bodies
+app.use(express.json());
+app.use(cors());
 
-// --- API Routes ---
-app.use('/api/auth', require('./routes/authRouters'));
-app.use('/api/admin', require('./routes/admin.js')); // Use .js for clarity
-app.use('/api/professor', require('./routes/professorRoutes.js'));
-app.use('/api/student', require('./routes/studentRoutes.js'));
-app.use('/api/courses', require('./routes/courses.js'));
-app.use('/api/assignments', require('./routes/assignments.js'));
+// ✅ Route imports
+const authRoutes = require('./routes/authRouters');
+const studentRoutes = require('./routes/studentRoutes');
+const professorRoutes = require('./routes/professorRoutes');
+const adminRoutes = require('./routes/admin');
+const assignmentRoutes = require('./routes/assignments');
+const courseRoutes = require('./routes/courses');
 
-// Test route
-app.get('/', (req, res) => {
-  res.send('EduFlex API is running...');
-});
+// ✅ Use routes
+app.use('/api/auth', authRoutes);
+app.use('/api/students', studentRoutes);
+app.use('/api/professors', professorRoutes);
+app.use('/api/admin', adminRoutes);
+app.use('/api/assignments', assignmentRoutes);
+app.use('/api/courses', courseRoutes);
 
-// 404 for unknown routes
-app.use((req, res) => {
-  res.status(404).json({ message: 'Route not found' });
-});
-
-// Start server
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, () => console.log(`✅ EduFlex backend running on port ${PORT}`));

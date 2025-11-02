@@ -1,15 +1,16 @@
-// routes/authRoutes.js
 const express = require('express');
 const router = express.Router();
 const authController = require('../controllers/authController');
 const { authenticate } = require('../middleware/authMiddleware');
-// public
-router.post('/login', authController.login);
-router.post('/forgot-password', authController.forgotPassword);
-router.post('/reset-password', authController.resetPassword);
 
-// protected
+// Public routes
+router.post('/register', authController.register);
+router.post('/login', authController.login);
+router.post('/forgot', authController.forgotPassword);
+router.post('/reset', authController.resetPassword);
+
+// Protected routes
 router.get('/me', authenticate, authController.getMe);
-router.put('/change-password', authenticate, authController.changePassword);
+router.post('/change-password', authenticate, authController.changePassword);
 
 module.exports = router;
